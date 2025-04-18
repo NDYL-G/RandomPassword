@@ -34,7 +34,7 @@ function generatePassword() {
   const num = getRandomDigit();
   const symbol = getRandomSymbol();
 
-  const password = `${word1}${num}${symbol}${word2}${num}${symbol}${word3}`;
+  const password = `${word1}${symbol}${word2}${num}${word3}`;
 
   document.getElementById("passwordDisplay").textContent = password;
 }
