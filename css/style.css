@@ -54,7 +54,6 @@ button:hover {
   margin: 0;
   padding: 0;
   line-height: 1;
-  text-transform: capitalize;
 }
 
 .password-container {
@@ -70,6 +69,7 @@ button:hover {
   border-radius: 5px;
   padding: 1.5rem;
   line-height: 1;
+  text-transform: capitalize;
 }
 
 
