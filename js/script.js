@@ -1,56 +1,61 @@
 let words = [];
 
-const symbols = ["!", "@", "#", "$", "%", "&", "*", "?", "+"];
-
-// Load the word list from words.json
-fetch("data/words.json")
-  .then(response => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok.");
-    }
-    return response.json();
-  })
-  .then(data => {
-    words = data;
-    generatePassword(); // Generate on load after words are ready
-  })
-  .catch(error => {
-    console.error("Error loading word list:", error);
-    document.getElementById("passwordDisplay").textContent = "⚠️ Failed to load word list.";
-  });
-
-function getRandomItem(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+// Capitalize first letter
+function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-function generatePassword() {
-  if (words.length === 0) {
+// Fetch the word list from the JSON file
+fetch("data/british_words_clean.json")
+  .then((response) => response.json())
+  .then((data) => {
+    words = data;
+    generatePassword(); // Generate a password on load
+  })
+  .catch((error) => {
+    console.error("Error loading word list:", error);
     document.getElementById("passwordDisplay").textContent = "⚠️ Word list not loaded.";
-    return;
-  }
+  });
 
-  const word1 = getRandomItem(words);
-  const word2 = getRandomItem(words);
-  const word3 = getRandomItem(words);
-  const num1 = Math.floor(Math.random() * 10);
-  const sym1 = getRandomItem(symbols);
-  const num2 = Math.floor(Math.random() * 10);
-  const sym2 = getRandomItem(symbols);
+// Generate a random password
+function generatePassword() {
+  if (words.length < 3) return;
 
-  const password = `${word1}${num1}${sym1}${word2}${num2}${sym2}${word3}`;
+  const getRandomWord = () => capitalize(words[Math.floor(Math.random() * words.length)]);
+  const getRandomDigit = () => Math.floor(Math.random() * 10);
+  const getRandomSymbol = () => {
+    const symbols = ['!', '@', '#', '$', '%', '&', '*'];
+    return symbols[Math.floor(Math.random() * symbols.length)];
+  };
+
+  const word1 = getRandomWord();
+  const word2 = getRandomWord();
+  const word3 = getRandomWord();
+  const num = getRandomDigit();
+  const symbol = getRandomSymbol();
+
+  const password = `${word1}${num}${symbol}${word2}${num}${symbol}${word3}`;
+
   document.getElementById("passwordDisplay").textContent = password;
 }
 
-function copyPassword() {
-  const password = document.getElementById("passwordDisplay").textContent;
-  if (!password) return;
-
-  navigator.clipboard.writeText(password).then(() => {
-    const copyBtn = document.getElementById("copyBtn");
-    copyBtn.textContent = "Copied!";
-    setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
-  });
-}
-
+// Event listener for Generate button
 document.getElementById("generateBtn").addEventListener("click", generatePassword);
-document.getElementById("copyBtn").addEventListener("click", copyPassword);
+
+// Copy to clipboard functionality
+document.getElementById("copyBtn").addEventListener("click", () => {
+  const passwordText = document.getElementById("passwordDisplay").textContent;
+
+  if (passwordText) {
+    navigator.clipboard.writeText(passwordText)
+      .then(() => {
+        document.getElementById("copyBtn").textContent = "Copied!";
+        setTimeout(() => {
+          document.getElementById("copyBtn").textContent = "Copy";
+        }, 1500);
+      })
+      .catch(err => {
+        console.error("Failed to copy: ", err);
+      });
+  }
+});
