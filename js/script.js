@@ -6,7 +6,7 @@ function capitalize(word) {
 }
 
 // Fetch the word list from the JSON file
-fetch("data/british_words_clean.json")
+fetch("data/words.json")
   .then((response) => response.json())
   .then((data) => {
     words = data;
